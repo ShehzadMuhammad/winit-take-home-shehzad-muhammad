@@ -11,10 +11,11 @@ import { map } from 'rxjs/operators';
 export class JsonPrettyInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      map((data) => {
-        // Check if we're in an HTTP context
+      map((data: any) => {
+        // Check if we are in an HTTP context
         if (context.getType() === 'http') {
-          const res = context.switchToHttp().getResponse();
+          const res: { setHeader: (name: string, value: string) => void } =
+            context.switchToHttp().getResponse();
 
           // If data is an object or array, format it as pretty JSON
           if (
@@ -28,6 +29,8 @@ export class JsonPrettyInterceptor implements NestInterceptor {
           }
         }
 
+        // Interceptors must handle any response type, so any is appropriate here
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return data;
       }),
     );

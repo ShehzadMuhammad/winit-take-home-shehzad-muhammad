@@ -1,21 +1,23 @@
 import { Injectable, Logger } from '@nestjs/common';
-import axios from 'axios';
-import * as fs from 'fs';
-import * as path from 'path';
-import { CaseSummary, parseCaseList } from './scraper/parsers/case-list.parser';
+import { Config } from '../common/constants/config';
+import { HtmlLoader } from '../common/utils/html-loader';
+import {
+  CaseSummary,
+  parseCaseList,
+} from '../scraper/parsers/case-list.parser';
+import { ScraperService } from '../scraper/scraper.service';
 
 @Injectable()
 export class SearchService {
   private readonly logger = new Logger(SearchService.name);
-  private readonly baseUrl = 'https://portal.scscourt.org/search/party';
+
+  constructor(private readonly scraperService: ScraperService) {}
 
   async searchByName(
     firstName: string,
     lastName: string,
   ): Promise<CaseSummary[]> {
-    const mode = process.env.MODE || 'mock';
-
-    if (mode === 'mock') {
+    if (Config.isMockMode()) {
       this.logger.log(`Running in MOCK mode for ${firstName} ${lastName}`);
       return this.searchFromFixture(firstName, lastName);
     }
@@ -28,20 +30,13 @@ export class SearchService {
     firstName: string,
     lastName: string,
   ): CaseSummary[] {
-    const folderName = `${firstName}_${lastName}`;
-    const filePath = path.join(
-      process.cwd(),
-      'fixtures',
-      folderName,
-      `search_${folderName}.html`,
-    );
+    const html = HtmlLoader.loadSearchFixture(firstName, lastName);
 
-    if (!fs.existsSync(filePath)) {
-      this.logger.warn(`Fixture not found: ${filePath}`);
+    if (!html) {
+      this.logger.warn(`Fixture not found for ${firstName} ${lastName}`);
       return [];
     }
 
-    const html = fs.readFileSync(filePath, 'utf8');
     const cases = parseCaseList(html);
     this.logger.log(`Returning ${cases.length} cases from fixture.`);
     return cases;
@@ -51,41 +46,19 @@ export class SearchService {
     firstName: string,
     lastName: string,
   ): Promise<CaseSummary[]> {
-    try {
-      const url = `${this.baseUrl}?firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}`;
+    const cases = await this.scraperService.scrapeSearchResults(
+      firstName,
+      lastName,
+    );
 
-      const response = await axios.get(url, {
-        headers: {
-          'User-Agent':
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15',
-          'Accept-Language': 'en-US,en;q=0.9',
-        },
-        timeout: 10000,
-      });
-
-      const html = response.data as string;
-
-      // Detect CAPTCHA or WAF block
-      if (
-        html.includes('recaptcha') ||
-        html.includes('Request unsuccessful') ||
-        html.includes('Access Denied')
-      ) {
-        this.logger.warn(
-          'CAPTCHA or access restriction detected — switching to mock mode.',
-        );
-        return this.searchFromFixture(firstName, lastName);
-      }
-
-      const cases = parseCaseList(html);
-      this.logger.log(`Fetched ${cases.length} cases live from portal.`);
-      return cases;
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error(`Live fetch failed: ${errorMessage}`);
-      this.logger.warn('Falling back to mock mode.');
+    // If scraper returns empty results (CAPTCHA or error), fall back to mock mode
+    if (cases.length === 0) {
+      this.logger.warn(
+        'Live scraping returned no results. Falling back to mock mode.',
+      );
       return this.searchFromFixture(firstName, lastName);
     }
+
+    return cases;
   }
 }
