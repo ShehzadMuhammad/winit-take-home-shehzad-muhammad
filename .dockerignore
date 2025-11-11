@@ -1,0 +1,35 @@
+# Node & build outputs
+node_modules
+npm-debug.log
+dist
+coverage
+.nyc_output
+
+# Git & local
+.git
+.gitignore
+.DS_Store
+.vscode
+.idea
+*.log
+*.swp
+*.swo
+*~
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# Tests
+test
+*.spec.ts
+
+# Tooling configs (keep tsconfig!)
+.eslintrc.js
+.prettierrc
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore
