@@ -2,6 +2,19 @@
 
 ### ✅ Project Overview
 
+This project is a production-ready **NestJS API service** that scrapes the **Santa Clara County Superior Court public portal** using **Axios** for HTTP requests and **Cheerio** for HTML parsing.
+
+The system supports two operational modes:
+
+- **Mock Mode (default):**  
+  Uses locally stored HTML fixtures to simulate live scraping.  
+  This allows full end-to-end testing without network access or CAPTCHA interference.
+
+- **Live Mode:**  
+  Performs real-time scraping from the court portal.  
+  Due to CAPTCHA and anti-bot measures on the site, live scraping is not possible during this submission.  
+  The system, however, gracefully detects CAPTCHA responses and returns a clear `"CAPTCHA detected"` or `"No results found"` message without attempting to bypass them.
+
 ## ⚙️ Setup & Deployment Instructions
 
 ### Run the Project

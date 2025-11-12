@@ -1,20 +1,38 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
+import { CaseSummary } from '../scraper/parsers/case-list.parser';
 import { SearchService } from './search.service';
-import { SearchRequestDto } from './dto/search-request.dto';
 
 @Controller('api/search')
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
   @Post()
-  async search(@Body() body: SearchRequestDto) {
+  @HttpCode(200)
+  async search(
+    @Body() body: { firstName: string; lastName: string },
+  ): Promise<{ cases: CaseSummary[] }> {
     const { firstName, lastName } = body;
-    const results = await this.searchService.searchByName(firstName, lastName);
 
-    if (results.length === 0) {
-      return { message: 'No cases found' };
+    if (!firstName || !lastName) {
+      throw new HttpException(
+        'Both firstName and lastName are required',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    return { cases: results };
+    const cases = await this.searchService.searchByName(firstName, lastName);
+
+    if (!cases || cases.length === 0) {
+      throw new HttpException('No cases found', HttpStatus.NOT_FOUND);
+    }
+
+    return { cases };
   }
 }

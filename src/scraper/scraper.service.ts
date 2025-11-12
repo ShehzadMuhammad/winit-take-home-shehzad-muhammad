@@ -1,14 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
-import { CaseSummary, parseCaseList } from './parsers/case-list.parser';
 import { parseCaseDetails } from './parsers/case-detail.parser';
+import { CaseSummary, parseCaseList } from './parsers/case-list.parser';
 
 @Injectable()
 export class ScraperService {
   private readonly logger = new Logger(ScraperService.name);
   private readonly baseUrl =
-    process.env.COURT_PORTAL_BASE_URL ||
-    'https://portal.scscourt.org';
+    process.env.COURT_PORTAL_BASE_URL || 'https://portal.scscourt.org';
 
   async scrapeSearchResults(
     firstName: string,
