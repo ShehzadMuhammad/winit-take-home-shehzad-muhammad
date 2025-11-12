@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ScraperModule } from '../scraper/scraper.module';
-import { MockModeService } from './mock-mode.service';
-import { LiveModeService } from './modes/live-mode.service';
+import { LiveModeService, MockModeService } from './modes';
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
 

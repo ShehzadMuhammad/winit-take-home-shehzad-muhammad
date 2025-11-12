@@ -1,13 +1,7 @@
 import * as cheerio from 'cheerio';
+import { CaseSummary } from './types/case.types';
 
-export interface CaseSummary {
-  caseNumber: string;
-  caseStyle: string;
-  caseType: string;
-  caseStatus: string;
-  filingDate: string;
-  detailLink: string;
-}
+export type { CaseSummary } from './types/case.types';
 
 export function parseCaseList(html: string): CaseSummary[] {
   try {

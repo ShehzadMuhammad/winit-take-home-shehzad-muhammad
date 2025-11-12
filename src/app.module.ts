@@ -8,8 +8,11 @@ import { SearchModule } from './search/search.module';
   imports: [
     ThrottlerModule.forRoot([
       {
-        ttl: Config.THROTTLER.TTL_SECONDS,
-        limit: Config.THROTTLER.getLimit(),
+        ttl: parseInt(process.env.THROTTLER_TTL_SECONDS || '60', 10),
+        limit:
+          Config.MODE === 'live'
+            ? parseInt(process.env.THROTTLER_LIMIT_LIVE || '3', 10)
+            : parseInt(process.env.THROTTLER_LIMIT_MOCK || '10', 10),
       },
     ]),
     SearchModule,

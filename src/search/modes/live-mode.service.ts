@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+
 import { CaseSummary } from '../../scraper/parsers/case-list.parser';
 import { ScraperService } from '../../scraper/scraper.service';
 
@@ -8,28 +9,30 @@ export class LiveModeService {
 
   constructor(private readonly scraperService: ScraperService) {}
 
-  async getCaseData(firstName: string, lastName: string): Promise<CaseSummary[]> {
+  /**
+   * Fetch live case data directly from the court portal.
+   * Does not fall back to mock data — only returns real results
+   * or an empty array if CAPTCHA or access restrictions are detected.
+   */
+  async getCaseData(
+    firstName: string,
+    lastName: string,
+  ): Promise<CaseSummary[]> {
     this.logger.log(`Fetching live case data for ${firstName} ${lastName}`);
 
-    try {
-      const cases = await this.scraperService.scrapeSearchResults(firstName, lastName);
+    const cases = await this.scraperService.scrapeSearchResults(
+      firstName,
+      lastName,
+    );
 
-      if (!cases || cases.length === 0) {
-        this.logger.warn(
-          `No live cases found or CAPTCHA detected for ${firstName} ${lastName}`,
-        );
-        return [];
-      }
-
-      this.logger.log(
-        `Retrieved ${cases.length} live case(s) for ${firstName} ${lastName}`,
-      );
-      return cases;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      this.logger.error(`Error fetching live case data: ${errorMessage}`);
+    if (!cases.length) {
+      this.logger.warn(`No live results found for ${firstName} ${lastName}.`);
       return [];
     }
+
+    this.logger.log(
+      `Retrieved ${cases.length} live case(s) for ${firstName} ${lastName}`,
+    );
+    return cases;
   }
 }
-
