@@ -1,98 +1,119 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🧩 Full-Stack Engineer Take-Home — Shehzad Muhammad
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+### ✅ Project Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## ⚙️ Setup & Deployment Instructions
 
-## Description
+### Run the Project
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
+**For Live Data (real-time scraping):**
 
 ```bash
-$ npm install
+make run_live
 ```
 
-## Compile and run the project
+**For Mock Data (offline fixtures):**
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+make run_mock
 ```
 
-## Run tests
+**To Stop Containers:**
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+make down
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## 🧾 Access & Anti-Bot Strategy (Legal and Operational)
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 1. Verification of Access Permissions
+
+The court portal (`https://portal.scscourt.org`) was checked for a `robots.txt` file, which **does not exist**.  
+This indicates that the site owner has not explicitly disallowed scraping.  
+No terms of use or access policies explicitly prohibit read-only scraping for public data.
+
+---
+
+### 2. Ethical & Compliant Access
+
+To ensure compliance and responsible scraping practices:
+
+- A **rate limiter** was implemented to prevent overuse and ensure ethical behavior.
+- The scraper performs **only necessary requests** for each search query.
+- When a CAPTCHA or access restriction appears, the service **immediately stops** scraping and returns an appropriate message such as `"CAPTCHA detected"` or `"No results found"`.
+- **No CAPTCHA bypassing, proxying, or automation** methods were used.
+
+---
+
+### 3. Mock Mode vs Live Mode
+
+| Mode                    | Description                                                                      | Use Case                                             |
+| ----------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| **Mock Mode (default)** | Parses pre-saved HTML fixtures under `/fixtures/`.                               | Safe offline testing without network requests.       |
+| **Live Mode**           | Fetches and parses live data from the public court portal using Axios + Cheerio. | Demonstrates live scraping logic in a compliant way. |
+
+Mode selection is controlled by the `MODE` environment variable.
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+MODE=mock docker compose up --build   # Mock (offline)
+MODE=live docker compose up --build   # Live (with real HTTP requests)
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+### 4. Proxy & Network Safeguards
 
-Check out a few resources that may come in handy when working with NestJS:
+- No proxy rotation or IP obfuscation is used.
+- All requests originate directly via Axios using standard headers.
+- The scraper respects rate limits and gracefully handles access errors.
+- No attempts are made to mimic browsers or evade firewall restrictions.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+---
 
-## Support
+### 5. Compliance Statement
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+This project was built with full legal and ethical compliance:
 
-## Stay in touch
+- No CAPTCHA, reCAPTCHA, or WAF circumvention was attempted.
+- All scraping logic can be run entirely offline in **mock mode**.
+- The project respects court data integrity and access boundaries.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
-## License
+## 🧪 Example cURL Request and JSON Response
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Example Request
+
+```bash
+curl -X POST http://localhost:3000/api/search \
+  -H "Content-Type: application/json" \
+  -d '{"firstName": "Jesse", "lastName": "Soliven"}'
+```
+
+### Example Response
+
+```json
+{
+  "caseNumber": "25CV474276",
+  "caseStyle": "Jpmorgan Chase Bank, N.a. vs Jesse Soliven",
+  "caseType": "Collections Rule 3.740 Limited (09) - under 10,000 Case",
+  "caseStatus": "Active Court",
+  "filingDate": "9/3/2025 Case",
+  "detailLink": "/case/NTg1OTcyNA%3D%3D",
+  "courtLocation": "Civil",
+  "parties": [
+    { "name": "Jesse L Soliven", "role": "Defendant" },
+    { "name": "Jpmorgan Chase Bank, N.a.", "role": "Plaintiff" },
+    { "name": "Joan S Wagner", "role": "Jpmorgan Chase Bank, N.a." }
+  ],
+  "hearings": [],
+  "source": {
+    "url": "mock://fixture/Jesse_Soliven/25CV474276",
+    "timestamp": "2025-11-12T02:09:01.584Z"
+  }
+}
+```
+
+---
