@@ -3,6 +3,12 @@ import { CaseSummary } from './types/case.types';
 
 export type { CaseSummary } from './types/case.types';
 
+/*
+  This function is responsible for parsing the case list HTML and returning the cases.
+  It uses the cheerio library to parse the HTML and extract the case data.
+  It also logs the results and returns the cases in the CaseSummary type.
+*/
+
 export function parseCaseList(html: string): CaseSummary[] {
   try {
     const $ = cheerio.load(html);

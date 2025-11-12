@@ -2,6 +2,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Config } from '../constants/config';
 
+/*
+
+  This class is responsible for loading the HTML fixtures for the search and case detail.
+*/
+
 export class HtmlLoader {
   private static getFixtureBase(): string {
     return process.env.FIXTURES_BASE_PATH || Config.FIXTURES.BASE_PATH;

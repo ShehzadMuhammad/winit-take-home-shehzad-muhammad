@@ -6,6 +6,11 @@ import {
   parseCaseList,
 } from '../../scraper/parsers/case-list.parser';
 
+/*
+  This service is responsible for loading mock case data from fixtures.
+  It uses the HtmlLoader to load the fixture and parse the case list and details.
+*/
+
 @Injectable()
 export class MockModeService {
   private readonly logger = new Logger(MockModeService.name);

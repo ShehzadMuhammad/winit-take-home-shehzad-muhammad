@@ -7,6 +7,10 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+/*
+  This interceptor is responsible for formatting the JSON response as pretty JSON.
+*/
+
 @Injectable()
 export class JsonPrettyInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {

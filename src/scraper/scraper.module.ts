@@ -6,4 +6,3 @@ import { ScraperService } from './scraper.service';
   exports: [ScraperService],
 })
 export class ScraperModule {}
-

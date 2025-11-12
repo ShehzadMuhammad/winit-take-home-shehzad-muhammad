@@ -9,6 +9,13 @@ import {
 import { CaseSummary } from '../scraper/parsers/case-list.parser';
 import { SearchService } from './search.service';
 
+/*
+  This controller is responsible for handling the search request and returning the cases.
+  It uses the CaseSummary type from the scraper module to return the cases.
+  Also handles validation for request body ie whether both firstName and lastName are provided.
+  and if no cases are found, it returns a 404 error.
+*/
+
 @Controller('api/search')
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}

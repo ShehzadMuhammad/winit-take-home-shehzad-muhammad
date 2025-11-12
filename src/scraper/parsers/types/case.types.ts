@@ -44,4 +44,3 @@ export interface CaseSummary {
     timestamp: string;
   };
 }
-

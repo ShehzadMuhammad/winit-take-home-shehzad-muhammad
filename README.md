@@ -41,57 +41,15 @@ make down
 
 ## 🧾 Access & Anti-Bot Strategy (Legal and Operational)
 
-### 1. Verification of Access Permissions
+This project adheres to strict legal and ethical standards when accessing the Santa Clara County Superior Court portal.
 
-The court portal (`https://portal.scscourt.org`) was checked for a `robots.txt` file, which **does not exist**.  
-This indicates that the site owner has not explicitly disallowed scraping.  
-No terms of use or access policies explicitly prohibit read-only scraping for public data.
+A rate limiter is implemented to prevent overuse and ensure responsible behavior. The scraper performs only the necessary requests for each search query. If a CAPTCHA or access restriction is detected, it immediately stops and returns a clear message such as "CAPTCHA detected" or "No results found".
 
----
+All requests are made directly via Axios using standard headers — with no proxy rotation, IP obfuscation, browser spoofing, or firewall evasion. The scraper respects rate limits and gracefully handles access errors.
 
-### 2. Ethical & Compliant Access
+Additionally, the project supports a fully offline mock mode using recorded HTML fixtures, ensuring that development and testing can be done without live scraping.
 
-To ensure compliance and responsible scraping practices:
-
-- A **rate limiter** was implemented to prevent overuse and ensure ethical behavior.
-- The scraper performs **only necessary requests** for each search query.
-- When a CAPTCHA or access restriction appears, the service **immediately stops** scraping and returns an appropriate message such as `"CAPTCHA detected"` or `"No results found"`.
-- **No CAPTCHA bypassing, proxying, or automation** methods were used.
-
----
-
-### 3. Mock Mode vs Live Mode
-
-| Mode                    | Description                                                                      | Use Case                                             |
-| ----------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| **Mock Mode (default)** | Parses pre-saved HTML fixtures under `/fixtures/`.                               | Safe offline testing without network requests.       |
-| **Live Mode**           | Fetches and parses live data from the public court portal using Axios + Cheerio. | Demonstrates live scraping logic in a compliant way. |
-
-Mode selection is controlled by the `MODE` environment variable.
-
-```bash
-MODE=mock docker compose up --build   # Mock (offline)
-MODE=live docker compose up --build   # Live (with real HTTP requests)
-```
-
----
-
-### 4. Proxy & Network Safeguards
-
-- No proxy rotation or IP obfuscation is used.
-- All requests originate directly via Axios using standard headers.
-- The scraper respects rate limits and gracefully handles access errors.
-- No attempts are made to mimic browsers or evade firewall restrictions.
-
----
-
-### 5. Compliance Statement
-
-This project was built with full legal and ethical compliance:
-
-- No CAPTCHA, reCAPTCHA, or WAF circumvention was attempted.
-- All scraping logic can be run entirely offline in **mock mode**.
-- The project respects court data integrity and access boundaries.
+No CAPTCHA, reCAPTCHA, or WAF circumvention was attempted, and the project fully respects court data integrity and access boundaries.
 
 ---
 

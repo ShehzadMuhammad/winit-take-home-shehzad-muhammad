@@ -10,6 +10,7 @@ export type { CaseDetail } from './types/case.types';
 /**
  * Parses case detail HTML and extracts structured data.
  */
+
 export function parseCaseDetails(html: string): CaseDetail {
   const $ = cheerio.load(html);
 
